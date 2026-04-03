@@ -1,0 +1,35 @@
+fastapi
+uvicorn[standard]
+pydantic
+redis[asyncio]
+motor
+pymongo
+python-dotenv
+
+# LangGraph orchestration
+langgraph
+langchain-core
+
+# LLM — AWS Bedrock
+boto3
+langchain-aws
+
+# STT - Google Gemini for audio files (free)
+google-generativeai
+httpx
+
+# Translation
+deep-translator
+
+# Language Detection
+langdetect
+
+# PDF Generation
+weasyprint
+
+# File uploads
+python-multipart
+
+# Template parsing
+openpyxl
+python-docx
