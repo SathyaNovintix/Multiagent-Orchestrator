@@ -1,0 +1,43 @@
+services:
+  # FastAPI Backend
+  - type: web
+    name: mom-orchestrator-backend
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn api.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.12.0
+      - key: AWS_REGION
+        sync: false
+      - key: AWS_ACCESS_KEY_ID
+        sync: false
+      - key: AWS_SECRET_ACCESS_KEY
+        sync: false
+      - key: MODEL_ID
+        sync: false
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: REDIS_URL
+        fromService:
+          type: redis
+          name: mom-redis
+          property: connectionString
+      - key: MONGODB_URL
+        sync: false
+      - key: MONGODB_DB
+        value: agentmesh
+      - key: APP_ENV
+        value: production
+      - key: AGENTOPS_API_KEY
+        sync: false
+      - key: TEAMS_WEBHOOK_URL
+        sync: false
+      - key: API_BASE_URL
+        value: https://mom-orchestrator-backend.onrender.com
+
+  # Redis Instance
+  - type: redis
+    name: mom-redis
+    ipAllowList: []
+    plan: free
