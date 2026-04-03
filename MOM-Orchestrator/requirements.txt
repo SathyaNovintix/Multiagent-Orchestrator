@@ -6,6 +6,9 @@ motor
 pymongo
 python-dotenv
 
+# Monitoring
+agentops
+
 # LangGraph orchestration
 langgraph
 langchain-core
