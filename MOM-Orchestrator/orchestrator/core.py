@@ -477,22 +477,23 @@ def init_orchestrator() -> None:
     global _compiled_graph, _agentops_initialized
     _compiled_graph = build_graph()
     
-    # Initialize AgentOps for monitoring
-    if not _agentops_initialized:
-        agentops_api_key = os.getenv("AGENTOPS_API_KEY")
-        if agentops_api_key and agentops_api_key != "your_agentops_api_key_here":
-            try:
-                agentops.init(
-                    api_key=agentops_api_key,
-                    auto_start_session=False,  # We'll manage sessions manually
-                    default_tags=["mom-orchestrator", "production"]
-                )
-                _agentops_initialized = True
-                print("✅ AgentOps initialized successfully")
-            except Exception as e:
-                print(f"⚠️  AgentOps initialization failed: {e}")
-        else:
-            print("⚠️  AgentOps API key not configured")
+    # Initialize AgentOps for monitoring (temporarily disabled due to Windows encoding issues)
+    # if not _agentops_initialized:
+    #     agentops_api_key = os.getenv("AGENTOPS_API_KEY")
+    #     if agentops_api_key and agentops_api_key != "your_agentops_api_key_here":
+    #         try:
+    #             agentops.init(
+    #                 api_key=agentops_api_key,
+    #                 auto_start_session=False,  # We'll manage sessions manually
+    #                 default_tags=["mom-orchestrator", "production"]
+    #             )
+    #             _agentops_initialized = True
+    #             print("✅ AgentOps initialized successfully")
+    #         except Exception as e:
+    #             print(f"⚠️  AgentOps initialization failed: {e}")
+    #     else:
+    #         print("⚠️  AgentOps API key not configured")
+    print("✅ Orchestrator initialized (AgentOps disabled)")
 
 
 # ---------------------------------------------------------------------------
