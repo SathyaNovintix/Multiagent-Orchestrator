@@ -1,5 +1,5 @@
 import type { StructuredMOM } from '../types';
-import { getMOMDownloadURL, getMOMExcelDownloadURL, sendMOMToTeams, getMOM } from '../api/client';
+import { getMOMDownloadURL, getMOMExcelDownloadURL, sendMOMToTeams, getMOM, assignTasksToPM } from '../api/client';
 import { useState } from 'react';
 import EditMOMModal from './EditMOMModal';
 
@@ -117,6 +117,7 @@ export default function MOMCard({ mom, devMode = false, onUpdate }: { mom: Struc
   const [sendStatus, setSendStatus] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [currentMOM, setCurrentMOM] = useState(mom);
+  const [isAssigning, setIsAssigning] = useState(false);
   
   const downloadUrl = currentMOM.file_url
     ? getMOMDownloadURL(currentMOM.mom_id, currentMOM.format_id || 'standard')
@@ -189,6 +190,36 @@ export default function MOMCard({ mom, devMode = false, onUpdate }: { mom: Struc
       setTimeout(() => setSendStatus(null), 8000);
     } finally {
       setIsSending(false);
+    }
+  };
+
+  const handleAssignTasks = async () => {
+    setIsAssigning(true);
+    setSendStatus(null);
+
+    try {
+      const result = await assignTasksToPM({
+        mom_id: currentMOM.mom_id,
+        // pm_session_id is optional, backend will use mom_id if not provided
+      });
+
+      setSendStatus({
+        type: 'success',
+        message: result.message || 'Tasks assigned to PM tool successfully!',
+      });
+
+      // Clear success message after 5 seconds
+      setTimeout(() => setSendStatus(null), 5000);
+    } catch (error: any) {
+      setSendStatus({
+        type: 'error',
+        message: error.response?.data?.detail || 'Failed to assign tasks. Please try again.',
+      });
+
+      // Clear error message after 8 seconds
+      setTimeout(() => setSendStatus(null), 8000);
+    } finally {
+      setIsAssigning(false);
     }
   };
 
@@ -501,6 +532,23 @@ export default function MOMCard({ mom, devMode = false, onUpdate }: { mom: Struc
               stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
           </svg>
           {isSending ? 'Sending...' : 'Send to Teams'}
+        </button>
+        <button 
+          onClick={handleAssignTasks} 
+          disabled={currentMOM.actions.length === 0 || isAssigning}
+          style={{
+            ...styles.downloadBtnFull, 
+            background: currentMOM.actions.length === 0 ? '#94a3b8' : isAssigning ? '#64748b' : '#ea580c',
+            cursor: currentMOM.actions.length === 0 || isAssigning ? 'not-allowed' : 'pointer',
+            border: 'none',
+            opacity: currentMOM.actions.length === 0 ? 0.5 : isAssigning ? 0.7 : 1,
+          }}
+        >
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ marginRight: 7 }}>
+            <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" 
+              stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+          </svg>
+          {isAssigning ? 'Assigning...' : 'Assign Tasks'}
         </button>
       </div>
 

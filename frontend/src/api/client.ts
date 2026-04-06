@@ -100,3 +100,14 @@ export async function getMOM(momId: string): Promise<any> {
   const res = await api.get(`/api/mom/${momId}`);
   return res.data;
 }
+
+// ── Assign Tasks to PM Tool ───────────────────────────────────────────────
+
+export async function assignTasksToPM(params: {
+  mom_id: string;
+  pm_session_id?: string;
+  custom_message?: string;
+}): Promise<{ status: string; message: string; pm_response?: any }> {
+  const res = await api.post('/api/tasks/assign', params);
+  return res.data;
+}

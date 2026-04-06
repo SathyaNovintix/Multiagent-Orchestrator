@@ -62,6 +62,7 @@ from agents.formatter.router import router as formatter_router
 from agents.response_generator.router import router as response_generator_router
 from agents.speech_to_text.router import router as speech_to_text_router
 from tools.microsoft_teams.router import router as teams_router
+from api.task_assignment import router as task_assignment_router
 
 app.include_router(conversational_router)
 app.include_router(intent_refiner_router)
@@ -74,6 +75,7 @@ app.include_router(formatter_router)
 app.include_router(response_generator_router)
 app.include_router(speech_to_text_router)
 app.include_router(teams_router)
+app.include_router(task_assignment_router)
 
 
 # ---------------------------------------------------------------------------
